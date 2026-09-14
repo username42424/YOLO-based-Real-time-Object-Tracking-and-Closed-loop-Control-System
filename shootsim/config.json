@@ -1,0 +1,196 @@
+{
+  "world": {
+    "width": 4000,
+    "height": 4000,
+    "spawn_margin": 200
+  },
+  "screen": {
+    "width": 640,
+    "height": 640
+  },
+  "target": {
+    "images": [
+      "Snipaste_2026-08-13_16-44-35.png",
+      "Snipaste_2026-08-13_17-23-14.png",
+      "Snipaste_2026-08-13_17-24-28.png",
+      "Snipaste_2026-08-13_17-24-42.png",
+      "Snipaste_2026-08-15_17-36-55.png",
+      "Snipaste_2026-08-15_17-37-24.png",
+      "Snipaste_2026-08-15_17-38-18.png"
+    ],
+    "img_cls_types": [
+      "both",
+      "both",
+      "both",
+      "both",
+      "single",
+      "both",
+      "single"
+    ],
+    "image": "Snipaste_2026-08-13_16-44-35.png",
+    "box_w": 80.0,
+    "box_h": 160.0,
+    "size_h_min": 50.0,
+    "img_max_h": [
+      460,
+      400,
+      400,
+      240,
+      400,
+      460,
+      170
+    ],
+    "hp": 150,
+    "mover": "jumpstrafe",
+    "speed": 240.0,
+    "dir_change_min": 0.4,
+    "dir_change_max": 1.2,
+    "bounce": true,
+    "min_count": 1,
+    "max_count": 1,
+    "spawn_in_crop": true,
+    "spawn_radius_min": 100,
+    "spawn_radius_max": 260,
+    "disappear_visible_min": 40,
+    "disappear_visible_max": 70,
+    "disappear_hidden_min": 8,
+    "disappear_hidden_max": 14
+  },
+  "weapon": {
+    "fire_rate_hz": 11.666666666666666,
+    "damage": {
+      "head": 40,
+      "mid": 20
+    },
+    "red_dot_offset_px": 0.0,
+    "red_dot_jitter_px": 0.0,
+    "red_dot_recoil_max_px": 0.0,
+    "red_dot_recoil_per_shot_px": 0.0,
+    "red_dot_recoil_recover_px": 0.0
+  },
+  "view": {
+    "sensitivity": 0.3011,
+    "sensitivity_y": 0.2684,
+    "apply_delay_frames": 0,
+    "fps": 100
+  },
+  "perception": {
+    "mode": "replay",
+    "noise_std_px": 4.0,
+    "miss_rate": 0.02,
+    "yolo_model": "../yolodeltav1.onnx",
+    "yolo_conf": 0.28,
+    "yolo_classes": [
+      0,
+      1,
+      2,
+      5
+    ],
+    "capture_size": 320,
+    "yolo_noise": {
+      "drop_rate": 0.0,
+      "drop_min_frames": 3,
+      "drop_max_frames": 12,
+      "jitter_px": 20.0,
+      "size_fluct": 0.5,
+      "head_swap": 0.15,
+      "body_drop_rate": 0.08,
+      "head_drop_rate": 0.08,
+      "phantom_rate": 0.05,
+      "phantom_min_frames": 3,
+      "phantom_max_frames": 8
+    }
+  },
+  "replay": {
+    "logs": [
+      "../logs/aim_20260902_134137.log",
+      "../logs/aim_20260902_004654.log",
+      "../logs/aim_20260902_125927.log",
+      "../logs/aim_20260902_131349.log",
+      "../logs/aim_20260902_140420.log",
+      "../logs/aim_20260902_135816.log",
+      "../logs/aim_20260901_202359.log",
+      "../logs/aim_20260904_220626.log",
+      "../logs/aim_20260905_131152.log",
+      "../logs/aim_20260905_190546.log",
+      "../logs/aim_20260905_191746.log"
+    ],
+    "holdout_logs": [
+      "../logs/aim_20260904_220626.log",
+      "../logs/aim_20260905_131152.log",
+      "../logs/aim_20260905_190546.log",
+      "../logs/aim_20260905_191746.log"
+    ],
+    "scale_x": 0.3011,
+    "scale_y": 0.2684,
+    "capture_center": 160.0,
+    "min_points": 3,
+    "send_lag": 0,
+    "on_end": "stop",
+    "source_chest_ratio": 0.3,
+    "source_chest_ratio_by_log": {
+      "aim_20260905_131152.log": 0.65
+    },
+    "capture_size": 320,
+    "use_logged_crosshair": true,
+    "tracking_only": true,
+    "head_zone_ratio": 0.25,
+    "dwell_h_ratio": 0.6
+  },
+  "tracker": {
+    "strategy": "main_real",
+    "gain": 0.417,
+    "cap": 106.5,
+    "deadzone": 6.0,
+    "ema_alpha": 0.26,
+    "ki": 0.0,
+    "kd": 0.0,
+    "lead_frames": 1,
+    "vel_ema": 0.6,
+    "aim_ratio": 0.24,
+    "view_scale": 0.3011,
+    "view_scale_y": 0.2684,
+    "obs_delay_frames": 0,
+    "control_interval_frames": 1,
+    "processing_latency_ms": 23.0,
+    "lost_search_delay": 14,
+    "search_interval_s": 0.5,
+    "search_speed": 260.0,
+    "apply_delay_frames": 0
+  },
+  "shooter": {
+    "policy": "always",
+    "auto_fire": true
+  },
+  "human_track": {
+    "enabled": true,
+    "gain": 0.35,
+    "jitter": 0.2,
+    "margin": 60.0
+  },
+  "episode": {
+    "max_seconds": 3.0,
+    "seed": 0
+  },
+  "logging": {
+    "dir": "results",
+    "per_frame": false,
+    "frame_interval": 10,
+    "mouse_log": null
+  },
+  "eval": {
+    "median_max": 1.1,
+    "first_hit_max": 0.3,
+    "first_inner60_max": 0.3,
+    "inner60_entry_failure_max": 0.25,
+    "dwell_min": 0.3,
+    "above_box_max": 0.2,
+    "timeout_max": 0.05
+  },
+  "optimize": {
+    "iterations": 2000,
+    "seeds": 4,
+    "output": "results/search.csv",
+    "best": "results/best_config.json"
+  }
+}

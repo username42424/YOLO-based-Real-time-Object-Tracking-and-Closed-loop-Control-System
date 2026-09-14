@@ -1,0 +1,31 @@
+# Python environments and caches
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# Runtime-generated data
+logs/
+outputs/
+*.log
+
+# Local secrets and machine-specific settings
+.env
+.env.*
+!.env.example
+*.secret
+secrets/
+
+# Generated media and simulator results
+shootsim/results/
+*.gif
+
+# Editors and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

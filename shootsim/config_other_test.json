@@ -1,0 +1,39 @@
+{
+  "perception": {
+    "mode": "gt_noise",
+    "noise_std_px": 2.0,
+    "miss_rate": 0.05,
+    "class_miss_rate": 0.0
+  },
+  "target": {
+    "images": ["shootsim/Snipaste_2026-08-13_16-44-35.png"],
+    "img_cls_types": ["both"],
+    "img_max_h": [400]
+  },
+  "tracker": {
+    "strategy": "other_test",
+    "aim_enabled": true,
+    "aim_head": true,
+    "aim_fov": 200.0,
+    "pid_kp": 0.60,
+    "pid_ki": 0.0,
+    "pid_kd": 0.005,
+    "lock_stickiness": 40.0,
+    "lock_tolerance_frames": 10,
+    "deadzone": 2.0
+  },
+  "episode": {
+    "max_seconds": 3.0
+  },
+  "shooter": {
+    "policy": "lock_delay",
+    "reaction_ms": 120,
+    "lost_grace_ms": 50,
+    "auto_fire": true
+  },
+  "view": {
+    "sensitivity": 0.3011,
+    "sensitivity_y": 0.2684,
+    "apply_delay_frames": 1
+  }
+}

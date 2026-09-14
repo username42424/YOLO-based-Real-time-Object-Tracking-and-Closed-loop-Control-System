@@ -1,0 +1,62 @@
+{
+  "perception": {
+    "mode": "gt_noise",
+    "noise_std_px": 2.0,
+    "miss_rate": 0.05,
+    "class_miss_rate": 0.0
+  },
+  "target": {
+    "images": [
+      "shootsim/Snipaste_2026-08-13_16-44-35.png",
+      "shootsim/Snipaste_2026-08-13_17-23-14.png",
+      "shootsim/Snipaste_2026-08-13_17-24-28.png",
+      "shootsim/Snipaste_2026-08-13_17-24-42.png",
+      "shootsim/Snipaste_2026-08-15_17-36-55.png",
+      "shootsim/Snipaste_2026-08-15_17-37-24.png",
+      "shootsim/Snipaste_2026-08-15_17-38-18.png"
+    ],
+    "img_cls_types": ["both", "both", "both", "both", "single", "both", "single"],
+    "img_max_h": [460, 400, 400, 240, 400, 460, 170],
+    "mover": "jumpstrafe",
+    "speed": 240.0,
+    "min_count": 1,
+    "max_count": 1,
+    "spawn_in_crop": true,
+    "spawn_radius_min": 100,
+    "spawn_radius_max": 260,
+    "disappear_visible_min": 40,
+    "disappear_visible_max": 70,
+    "disappear_hidden_min": 8,
+    "disappear_hidden_max": 14,
+    "hp": 150
+  },
+  "tracker": {
+    "strategy": "obs_auto_aim",
+    "target_type": "head",
+    "aim_fov": 300.0,
+    "base_sensitivity": 1.2,
+    "acceleration_curve": 1.8,
+    "smooth_factor": 0.2,
+    "output_cap": 0.0,
+    "obs_delay_frames": 1,
+    "control_interval_frames": 1
+  },
+  "view": {
+    "sensitivity": 0.3011,
+    "sensitivity_y": 0.2684,
+    "apply_delay_frames": 1,
+    "fps": 100
+  },
+  "shooter": {
+    "policy": "always",
+    "auto_fire": true
+  },
+  "episode": {
+    "max_seconds": 3.0
+  },
+  "logging": {
+    "dir": "results/obs_auto_aim",
+    "per_frame": false,
+    "frame_interval": 10
+  }
+}

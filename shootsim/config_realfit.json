@@ -82,9 +82,7 @@
     "yolo_conf": 0.28,
     "yolo_classes": [
       0,
-      1,
-      2,
-      5
+      1
     ],
     "capture_size": 320,
     "yolo_noise": {

@@ -599,21 +599,23 @@ def _create_detector(model_path, conf, iou, emit=None):
         emit(f"[模型] YOLO26 end-to-end detected: {model_path}")
         # Model metadata: 0=head, 1=person. YOLOv26 remaps these to the
         # project's stable internal convention: 0=body/person, 1=head.
-        _CLASS_NAMES = ["person", "head"]
+        _CLASS_NAMES = ["enemy", "head"]
         return YOLOv26(model_path, conf, iou, _CLASS_NAMES, precision, emit)
     elif "v5" in basename or basename.startswith("v5"):
         emit(f"[模型] V5-pro detected: {model_path}")
-        _CLASS_NAMES = ["class0", "class1", "class2", "class3"]
+        # 只保留项目约定的两类：0=敌人/身体框，1=头部框。
+        # 即使 ONNX 模型仍输出更多类别，后处理也只读取前两类分数。
+        _CLASS_NAMES = ["enemy", "head"]
         return YOLOv5(model_path, conf, iou, _CLASS_NAMES, precision, emit)
     elif "v11" in basename or "yolo11" in basename or "dawan" in basename.lower():
         emit(f"[模型] YOLOv11 detected: {model_path}")
-        # Dawan 模型 6 类
-        _CLASS_NAMES = ["class0", "class1", "class2", "class3", "class4", "class5"]
+        # 模型可能仍是 6 类输出，但项目只使用 0=敌人、1=头部。
+        _CLASS_NAMES = ["enemy", "head"]
         return YOLOv11(model_path, conf, iou, _CLASS_NAMES, precision, emit)
     else:
         emit(f"[模型] 未知模型类型，默认 YOLOv11 推理: {model_path}")
         # fallback：探测输出维度
-        _CLASS_NAMES = ["class0", "class1", "class2", "class3"]
+        _CLASS_NAMES = ["enemy", "head"]
         return YOLOv11(model_path, conf, iou, _CLASS_NAMES, precision, emit)
 
 # ── 基类 ──
@@ -868,7 +870,7 @@ def draw_boxes(img, dets, class_names=None, aim_center=None, dot_center=None):
     标签画在框下方（不遮挡准星/红点区域）。
     """
     if class_names is None:
-        class_names = ["class0", "class1", "class2", "class3"]
+        class_names = ["enemy", "head"]
     h, w = img.shape[:2]
     cx, cy = aim_center if aim_center else (w // 2, h // 2)
     cx, cy = int(cx), int(cy)
@@ -906,6 +908,20 @@ def _base_dir():
 
 CONFIG_PATH = os.path.join(_base_dir(), "config.json")
 
+SUPPORTED_TARGET_CLASSES = (0, 1)
+
+def _normalize_target_classes(values):
+    """Keep only the project's two supported classes: enemy and head."""
+    normalized = set()
+    for value in values or []:
+        try:
+            cls = int(value)
+        except (TypeError, ValueError):
+            continue
+        if cls in SUPPORTED_TARGET_CLASSES:
+            normalized.add(cls)
+    return sorted(normalized)
+
 # ============================================================
 # 默认配置
 # ============================================================
@@ -915,7 +931,7 @@ DEFAULT = {
     "output_dir": "outputs",
     "conf": 0.45,
     "iou": 0.45,
-    "target_classes": [0, 5],
+    "target_classes": [0, 1],
     "target_priority": "body",
     "chest_ratio": 0.3584,
     "head_ratio": 0.70,
@@ -1061,7 +1077,10 @@ def load_config():
                 cfg = json.load(f)
         except Exception:
             return merge_config_defaults({}, DEFAULT)
-        return merge_config_defaults(cfg, DEFAULT)
+        cfg = merge_config_defaults(cfg, DEFAULT)
+        cfg["target_classes"] = _normalize_target_classes(
+            cfg.get("target_classes", SUPPORTED_TARGET_CLASSES))
+        return cfg
     return merge_config_defaults({}, DEFAULT)
 
 def save_config(cfg):
@@ -1132,7 +1151,7 @@ def _reaction_test_worker(config, model_file, camera, cam_lock, stop_event, emit
     size = max(128, int(rt_cfg.get("size", 640)))
     giveup = float(rt_cfg.get("window_s", 1.0))
     lost_s = float(rt_cfg.get("lost_s", 0.3))
-    classes = set(config.get("target_classes", [0, 1, 5]))
+    classes = set(config.get("target_classes", [0, 1]))
     conf = float(config.get("conf", 0.35))
 
     # 独立检测器会话(与瞄准互不干扰); 加载失败直接退出线程, 绝不碰瞄准
@@ -1301,7 +1320,7 @@ def _auto_trigger_worker(config, model_file, camera, cam_lock, stop_event, emit)
     interval = float(at.get("interval_ms", 75.0)) / 1000.0
     size = max(128, int(at.get("size", 640)))
     grace = float(at.get("grace_ms", 300.0)) / 1000.0
-    classes = set(config.get("target_classes", [0, 5]))
+    classes = set(config.get("target_classes", [0, 1]))
     det_conf = float(config.get("conf", 0.35))
 
     try:

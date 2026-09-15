@@ -61,7 +61,7 @@ DEFAULT = {
         "miss_rate": 0.02,      # gt_noise: 单帧丢失概率
         "yolo_model": "../yolodeltav1.onnx",
         "yolo_conf": 0.35,
-        "yolo_classes": [0, 1, 5],
+        "yolo_classes": [0, 1],
         "capture_size": 640,    # yolo 模式：屏幕中心截图区域
     },
     "tracker": {

@@ -17,7 +17,7 @@ for name in ["640", "416", "320", "256"]:
         print(f"{name}: 文件不存在, 跳过")
         continue
     try:
-        det = _get_aim_main_and_detector(model, 0.28, [0, 1, 5], 0.7)
+        det = _get_aim_main_and_detector(model, 0.28, [0, 1], 0.7)
     except Exception as e:
         print(f"{name}: 加载失败 {e}")
         continue

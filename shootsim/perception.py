@@ -193,7 +193,7 @@ class YoloPerceiver(BasePerceiver):
         self.rng = rng if rng is not None else random.Random(0)
         self.capture_size = int(cfg.get("capture_size", 640))
         self.conf = float(cfg.get("yolo_conf", 0.35))
-        self.classes = set(cfg.get("yolo_classes", [0, 1, 5]))
+        self.classes = set(cfg.get("yolo_classes", [0, 1]))
         self.head_classes = set(cfg.get("yolo_head_classes", [1]))  # 头框类别
         self.prefer_body = bool(cfg.get("yolo_prefer_body", True))
         # 实战噪声参数

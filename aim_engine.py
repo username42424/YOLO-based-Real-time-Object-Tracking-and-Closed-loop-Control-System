@@ -117,7 +117,10 @@ class MainEngine:
         self.recoil_prediction_cap_px = max(
             0.0, float(ac.get("recoil_prediction_cap_px", 20.0)))
         # 目标选择
-        self.target_cls = set(config.get("target_classes", [0, 1, 5]))
+        self.target_cls = {
+            int(cls) for cls in config.get("target_classes", [0, 1])
+            if str(cls).lstrip("-").isdigit() and int(cls) in (0, 1)
+        }
         # 只影响首次候选排序；已锁定目标仍沿用原有同类连续匹配/切换规则。
         self.target_priority = str(config.get("target_priority", "body")).lower()
         if self.target_priority not in ("body", "head"):

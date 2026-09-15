@@ -81,7 +81,7 @@ def announce_engine_status(started):
 
 DEFAULT = {
     "model":"yolodeltav1.onnx","output_dir":"outputs","conf":0.15,"iou":0.55,
-    "capture_size":640,"target_classes":[0,5],"target_priority":"body","chest_ratio":0.3584,"head_ratio":0.70,
+    "capture_size":640,"target_classes":[0,1],"target_priority":"body","chest_ratio":0.3584,"head_ratio":0.70,
     "anti_recoil":False,"recoil_profile":"unknown",
     "default_recoil":{"enabled":False,"strength":4.0},
     "recoil":{"recovery_ms":100.0,"output_period_ms":30.0,
@@ -122,8 +122,8 @@ DEFAULT = {
     "auto_trigger":{"enabled":False,"min_size":80.0,"conf":0.65,"interval_ms":75,
                     "size":640,"grace_ms":300},
 }
-CLASS_NAMES=["敌人(0)","头(1)","友军(2)","人机(3)","倒地(4)","靶场假人(5)","靶场头(6)"]
-NUM_CLASSES=7
+CLASS_NAMES=["敌人(0)","头部(1)"]
+NUM_CLASSES=len(CLASS_NAMES)
 KEY_OPTIONS = (
     [chr(c) for c in range(ord("a"),ord("z")+1)]+[str(n) for n in range(10)]
     +["`","ctrl","shift","alt","space","tab","enter","backspace","delete","esc","up","down","left","right"]
@@ -147,7 +147,12 @@ def load_config():
         try:
             with open(CONFIG_PATH,"r",encoding="utf-8") as f: cfg=json.load(f)
         except: return merge_config_defaults({}, DEFAULT)
-        return merge_config_defaults(cfg, DEFAULT)
+        cfg = merge_config_defaults(cfg, DEFAULT)
+        cfg["target_classes"] = sorted({
+            int(cls) for cls in cfg.get("target_classes", [])
+            if int(cls) in range(NUM_CLASSES)
+        })
+        return cfg
     return merge_config_defaults({}, DEFAULT)
 
 def save_config(cfg):

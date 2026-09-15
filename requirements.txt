@@ -1,0 +1,9 @@
+# Core runtime
+numpy
+opencv-python
+onnxruntime
+dxcam
+Pillow
+
+# ShootSim visualization
+pygame

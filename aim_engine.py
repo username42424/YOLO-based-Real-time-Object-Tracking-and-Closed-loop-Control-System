@@ -230,7 +230,7 @@ class MainEngine:
             0.0, min(1.0, float(ac.get("missing_decay", 0.45))))
         self._missing_max_counts = max(
             0.0, float(ac.get("missing_max_counts", 24.0)))
-        # 抖动相位里误差常超 3.96(人机化死区), 导致到达目标后仍连续小发、准星发抖;
+        # 抖动相位里误差常超 3.96(拟人化死区), 导致到达目标后仍连续小发、准星发抖;
         # 用更大的停发死区 + 目标点滤波(见 compute)让准星到位即停。
         self._unit_tp = [0.0, 0.0]      # 轻EMA目标点
         self._unit_tp_ok = False

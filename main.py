@@ -604,12 +604,11 @@ def _create_detector(model_path, conf, iou, emit=None):
     elif "v5" in basename or basename.startswith("v5"):
         emit(f"[模型] V5-pro detected: {model_path}")
         # 只保留项目约定的两类：0=敌人/身体框，1=头部框。
-        # 即使 ONNX 模型仍输出更多类别，后处理也只读取前两类分数。
         _CLASS_NAMES = ["enemy", "head"]
         return YOLOv5(model_path, conf, iou, _CLASS_NAMES, precision, emit)
     elif "v11" in basename or "yolo11" in basename or "dawan" in basename.lower():
         emit(f"[模型] YOLOv11 detected: {model_path}")
-        # 模型可能仍是 6 类输出，但项目只使用 0=敌人、1=头部。
+        # 项目类别固定为 0=敌人、1=头部。
         _CLASS_NAMES = ["enemy", "head"]
         return YOLOv11(model_path, conf, iou, _CLASS_NAMES, precision, emit)
     else:
@@ -718,7 +717,7 @@ class _BaseYOLO:
 
 class YOLOv5(_BaseYOLO):
     """
-    V5-pro.onnx 输出格式: [1, 6300, 9] → [n, 9] → cx,cy,w,h,obj,cls0..clsN
+    V5-pro.onnx 输出格式: [1, N, 5+C] → [n, 5+C] → cx,cy,w,h,obj,cls0..clsN
     """
     def __init__(self, model_path, conf, iou, class_names, precision="fp32",
                  emit=None):
@@ -764,7 +763,7 @@ class YOLOv5(_BaseYOLO):
 class YOLOv11(_BaseYOLO):
     """
     YOLOv8/v11 ONNX 输出格式: [1, C, N] where C = 5 + num_classes
-    例如 Dawan_0121_v11s_320: [1, 11, 2100] → 6 classes
+    项目类别：enemy(0)、head(1)
     """
     def __init__(self, model_path, conf, iou, class_names, precision="fp32",
                  emit=None):
@@ -773,14 +772,13 @@ class YOLOv11(_BaseYOLO):
 
     def _postprocess(self, out, iw, ih, r, dw, dh):
         # YOLOv8/v11 格式: [batch, channels, boxes] → 转置为 [boxes, channels]
-        # Dawan v11输出: [1, 11, N] where N = 8400(640x640), 2100(320x320), 1344(256x256)
-        # 通道布局: ch0=cx, ch1=cy, ch2=w, ch3=h, ch4-9=6个类别分数, ch10=未使用
+        # 通道布局: ch0=cx, ch1=cy, ch2=w, ch3=h，后续为项目类别分数
         # 注意: YOLOv8/v11 没有单独的objectness通道！ch4就是第一个类别的分数
-        preds = out[0]  # [11, N]
-        preds = preds.T  # [N, 11]
+        preds = out[0]
+        preds = preds.T
 
         boxes = preds[:, :4]
-        # ch4-9 是6个类别的分类分数（已经sigmoid过，值域[0,1]）
+        # 从 ch4 开始读取 enemy/head 的分类分数（已经 sigmoid 过，值域[0,1]）
         cls_scores = preds[:, 4:4 + self._num_classes]
 
         # YOLOv8/v11直接用分类分数，不需要乘objectness

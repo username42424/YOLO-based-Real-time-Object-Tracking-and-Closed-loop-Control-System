@@ -594,12 +594,11 @@ class MainEngine:
             cy = (bx[1] + bx[3]) * 0.5
             dist = math.hypot(cx - cx0, cy - cy0)
             target_dists.append((dist, d, cx, cy))
-        # 头/身优先级可配置；同类内仍离准星最近，身框内部保持 0 优先于 5。
-        # cls=1 是现有内部约定的头框，其他候选保持原有身框语义。
+        # 头/身优先级可配置；同类内仍选择离准星最近的候选。
+        # 项目类别约定：cls=0 为敌人/身体框，cls=1 为头部框。
         head_first = self.target_priority == "head"
         target_dists.sort(key=lambda x: (
                                          0 if ((x[1]["cls"] == 1) == head_first) else 1,
-                                         1 if x[1]["cls"] == 5 else 0,
                                          x[0]))
 
         if not target_dists:
